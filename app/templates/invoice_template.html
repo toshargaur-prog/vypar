@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GST Tax Invoice - {{ invoice.invoice_no }}</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #0d9488;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --bg-table: #f9fafb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            color: var(--text-main);
+            padding: 30px 15px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .no-print-bar {
+            max-width: 850px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .invoice-card {
+            max-width: 850px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 35px 40px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border);
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .biz-brand h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .biz-brand .tagline {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .biz-meta {
+            font-size: 11.5px;
+            color: #4b5563;
+            line-height: 1.5;
+        }
+
+        .tax-badge-wrap {
+            text-align: right;
+        }
+        .tax-badge {
+            display: inline-block;
+            background: #eff6ff;
+            color: var(--primary);
+            border: 1px solid #bfdbfe;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .inv-number {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .inv-dates {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+            background: var(--bg-table);
+            padding: 16px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .party-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .party-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        table.items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+        }
+        table.items-table th {
+            background: #f1f5f9;
+            color: #334155;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 10px 12px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+        table.items-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+            vertical-align: top;
+        }
+        table.items-table .text-right {
+            text-align: right;
+        }
+        table.items-table .text-center {
+            text-align: center;
+        }
+
+        .invoice-bottom {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .upi-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #ecfdf5;
+            border: 1px dashed #10b981;
+            padding: 14px;
+            border-radius: 8px;
+        }
+        .upi-qr-container svg {
+            width: 100px;
+            height: 100px;
+            display: block;
+            background: #ffffff;
+            padding: 4px;
+            border-radius: 4px;
+            border: 1px solid #d1fae5;
+        }
+        .upi-details {
+            font-size: 12px;
+        }
+        .upi-details strong {
+            color: #065f46;
+            font-size: 13px;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .summary-table td {
+            padding: 6px 0;
+            font-size: 12.5px;
+        }
+        .summary-table .amount {
+            text-align: right;
+            font-weight: 600;
+        }
+        .summary-table tr.total-row td {
+            border-top: 2px solid var(--border);
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--primary);
+            padding-top: 10px;
+        }
+        .summary-table tr.due-row td {
+            font-size: 13px;
+            font-weight: 700;
+            color: #b91c1c;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .status-PAID { background: #dcfce7; color: #15803d; }
+        .status-OVERDUE { background: #fee2e2; color: #b91c1c; }
+        .status-UNPAID { background: #fef3c7; color: #b45309; }
+        .status-PARTIAL { background: #e0e7ff; color: #4338ca; }
+
+        .footer-terms {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .sign-box {
+            text-align: center;
+            min-width: 160px;
+        }
+        .sign-line {
+            height: 45px;
+            border-bottom: 1px solid #9ca3af;
+            margin-bottom: 6px;
+        }
+
+        @media print {
+            body {
+                background: #ffffff;
+                padding: 0;
+            }
+            .no-print-bar {
+                display: none;
+            }
+            .invoice-card {
+                box-shadow: none;
+                border: none;
+                padding: 10px 0;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print-bar">
+        <div>
+            <strong>VyaparAI OS</strong> — Digital GST Invoice Generator
+        </div>
+        <div style="display:flex; gap:10px;">
+            <a href="/" class="btn btn-secondary">← Back to Dashboard</a>
+            <button onclick="window.print()" class="btn btn-primary">🖨️ Print / Save as PDF</button>
+        </div>
+    </div>
+
+    <div class="invoice-card">
+        <!-- Header -->
+        <div class="invoice-header">
+            <div class="biz-brand">
+                <h1>{{ biz.name }}</h1>
+                <div class="tagline">{{ biz.tagline }}</div>
+                <div class="biz-meta">
+                    <div>📍 {{ biz.address }}</div>
+                    <div>📞 {{ biz.phone }} &nbsp;|&nbsp; ✉️ {{ biz.email }}</div>
+                    <div><strong>GSTIN:</strong> {{ biz.gstin }} &nbsp;|&nbsp; <strong>State:</strong> {{ biz.state_name }} ({{ biz.state_code }})</div>
+                </div>
+            </div>
+
+            <div class="tax-badge-wrap">
+                <div class="tax-badge">Tax Invoice (GST)</div>
+                <div class="inv-number">#{{ invoice.invoice_no }}</div>
+                <div class="inv-dates">
+                    <div><strong>Date:</strong> {{ invoice.created_at[:10] }}</div>
+                    <div><strong>Due Date:</strong> {{ invoice.due_date }}</div>
+                    <div style="margin-top: 4px;">
+                        <span class="status-pill status-{{ invoice.status }}">{{ invoice.status }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parties Details -->
+        <div class="grid-2">
+            <div>
+                <div class="party-title">Billed To (Customer / Buyer)</div>
+                <div class="party-name">{{ invoice.customer_name }}</div>
+                <div style="font-size: 12px; color: #4b5563; line-height: 1.5;">
+                    <div>📞 {{ invoice.customer_phone }}</div>
+                    {% if invoice.customer_address %}<div>📍 {{ invoice.customer_address }}</div>{% endif %}
+                    {% if invoice.customer_gstin %}<div><strong>GSTIN:</strong> {{ invoice.customer_gstin }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div>
+                <div class="party-title">Payment & Dispatch Details</div>
+                <div style="font-size: 12px; color: #4b5563; line-height: 1.5;">
+                    <div><strong>Place of Supply:</strong> {{ biz.state_name }} (State Code {{ biz.state_code }})</div>
+                    <div><strong>Reverse Charge:</strong> No</div>
+                    <div><strong>Payment Terms:</strong> Instant UPI / Net Banking / Credit Khata</div>
+                    <div><strong>Mode of Transport:</strong> Hand Delivery / Local Courier</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Items Table -->
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th style="width: 40px;" class="text-center">#</th>
+                    <th>Item Description</th>
+                    <th style="width: 80px;" class="text-center">HSN/SAC</th>
+                    <th style="width: 70px;" class="text-center">Qty</th>
+                    <th style="width: 90px;" class="text-right">Rate (₹)</th>
+                    <th style="width: 70px;" class="text-center">GST %</th>
+                    <th style="width: 80px;" class="text-right">Tax (₹)</th>
+                    <th style="width: 100px;" class="text-right">Amount (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td class="text-center">{{ loop.index }}</td>
+                    <td>
+                        <strong>{{ item.item_name }}</strong>
+                    </td>
+                    <td class="text-center">{{ item.hsn_code or '-' }}</td>
+                    <td class="text-center">{{ item.quantity }} {{ item.unit }}</td>
+                    <td class="text-right">{{ "%.2f"|format(item.unit_price) }}</td>
+                    <td class="text-center">{{ item.gst_rate }}%</td>
+                    <td class="text-right">{{ "%.2f"|format(item.tax_amount) }}</td>
+                    <td class="text-right"><strong>{{ "%.2f"|format(item.total_price) }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Bottom: UPI QR & Financial Summary -->
+        <div class="invoice-bottom">
+            <div class="upi-box">
+                <div class="upi-qr-container">
+                    {{ qr_svg|safe }}
+                </div>
+                <div class="upi-details">
+                    <strong>📱 Instant UPI Scan & Pay</strong>
+                    <div style="margin: 4px 0; color: #047857;">Scan via PhonePe, Google Pay, Paytm, or BHIM.</div>
+                    <div style="font-size: 11px; color: #374151;"><strong>VPA:</strong> {{ biz.upi_id }}</div>
+                    <div style="font-size: 11px; color: #374151;"><strong>Payee:</strong> {{ biz.upi_name }}</div>
+                    <div style="font-size: 11px; color: #374151;"><strong>Amount:</strong> ₹{{ "%.2f"|format(invoice.balance_amount) }}</div>
+                </div>
+            </div>
+
+            <div>
+                <table class="summary-table">
+                    <tr>
+                        <td>Taxable Subtotal:</td>
+                        <td class="amount">₹{{ "%.2f"|format(invoice.subtotal) }}</td>
+                    </tr>
+                    {% if invoice.cgst > 0 %}
+                    <tr>
+                        <td>CGST:</td>
+                        <td class="amount">₹{{ "%.2f"|format(invoice.cgst) }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if invoice.sgst > 0 %}
+                    <tr>
+                        <td>SGST:</td>
+                        <td class="amount">₹{{ "%.2f"|format(invoice.sgst) }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if invoice.igst > 0 %}
+                    <tr>
+                        <td>IGST:</td>
+                        <td class="amount">₹{{ "%.2f"|format(invoice.igst) }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr class="total-row">
+                        <td>Total Bill Amount:</td>
+                        <td class="amount">₹{{ "%.2f"|format(invoice.total_amount) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Paid Amount:</td>
+                        <td class="amount" style="color: #15803d;">₹{{ "%.2f"|format(invoice.paid_amount) }}</td>
+                    </tr>
+                    <tr class="due-row">
+                        <td>Balance Outstanding:</td>
+                        <td class="amount">₹{{ "%.2f"|format(invoice.balance_amount) }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-terms">
+            <div>
+                <strong>Terms & Conditions:</strong>
+                <div>1. Goods once sold will not be taken back without original bill.</div>
+                <div>2. Interest @ 18% p.a. will be charged if payment is not cleared within due date.</div>
+                <div>3. Subject to local jurisdiction only. This is a computer-generated tax invoice.</div>
+            </div>
+
+            <div class="sign-box">
+                <div class="sign-line"></div>
+                <div>For <strong>{{ biz.name }}</strong></div>
+                <div style="font-size: 10px;">Authorized Signatory</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

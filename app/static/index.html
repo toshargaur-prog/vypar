@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VyaparAI OS — AI Operating System for Small Businesses</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand-section">
+            <div class="brand-icon">⚡</div>
+            <div class="brand-text">
+                <h2>VyaparAI OS</h2>
+                <p>AI Operating System</p>
+            </div>
+        </div>
+
+        <ul class="nav-links">
+            <li>
+                <a class="nav-item active" id="nav-dashboard" onclick="switchTab('dashboard')">
+                    <span>📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-item" id="nav-whatsapp" onclick="switchTab('whatsapp')">
+                    <span>💬</span>
+                    <span>WhatsApp AI Assistant</span>
+                    <span class="nav-badge">Live</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-item" id="nav-invoices" onclick="switchTab('invoices')">
+                    <span>🧾</span>
+                    <span>GST Invoices &amp; Bills</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-item" id="nav-inventory" onclick="switchTab('inventory')">
+                    <span>📦</span>
+                    <span>Inventory &amp; Stock</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-item" id="nav-customers" onclick="switchTab('customers')">
+                    <span>👥</span>
+                    <span>Customers &amp; Khata</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-item" id="nav-followups" onclick="switchTab('followups')">
+                    <span>⏰</span>
+                    <span>Auto Follow-Ups</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-item" id="nav-settings" onclick="switchTab('settings')">
+                    <span>⚙️</span>
+                    <span>Business Settings</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-item" id="nav-security" onclick="switchTab('security')">
+                    <span>🛡️</span>
+                    <span>Hacker Defense</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div id="sidebarStoreName" style="font-weight:600; color:#cbd5e1; margin-bottom:2px;">My Business Store</div>
+            <div>Zero-Cost &amp; Inputtable v2.0</div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="biz-pill" onclick="openBusinessProfileModal()" title="Click to edit your store details">
+                    <span style="font-size:15px;">🏬</span>
+                    <div>
+                        <strong id="topbarStoreName">My Business Store</strong>
+                        <span style="font-size:11px; color:#64748b; margin-left:4px;">(Edit ✎)</span>
+                    </div>
+                </div>
+                <div style="font-size:11.5px; color:#475569; background:#f1f5f9; padding:4px 10px; border-radius:6px; border:1px solid #e2e8f0;">
+                    UPI: <strong id="topbarUpiId">mybusiness@upi</strong>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <div class="live-indicator">
+                    <span class="pulse-dot"></span>
+                    <span>AI Engine Active</span>
+                </div>
+                <button onclick="openCreateInvoiceModal()" class="btn btn-primary">
+                    + New GST Bill
+                </button>
+            </div>
+        </header>
+
+        <!-- Page Body -->
+        <main class="page-container">
+
+            <!-- ======================================================== -->
+            <!-- TAB 1: DASHBOARD -->
+            <!-- ======================================================== -->
+            <section id="dashboard" class="tab-content active">
+                
+                <!-- Welcome Onboarding Card -->
+                <div class="welcome-banner" id="onboardingBanner">
+                    <div>
+                        <h3>👋 Welcome to your AI Operating System!</h3>
+                        <p>
+                            Get your business digitized in 3 steps: 
+                            <strong>1. Set up store details</strong> (Name, GSTIN, UPI ID), 
+                            <strong>2. Add your products/services</strong> to inventory, and 
+                            <strong>3. Create your first bill</strong> or test live customer inquiries on WhatsApp!
+                        </p>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button onclick="openBusinessProfileModal()" class="btn btn-secondary" style="background:#ffffff; color:#312e81; font-weight:700;">
+                            ⚙️ Setup Business
+                        </button>
+                        <button onclick="openAddItemModal()" class="btn btn-primary" style="background:#4f46e5; border:1px solid #818cf8;">
+                            + Add Product
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI Grid -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-info">
+                            <div class="kpi-label">Today's Revenue</div>
+                            <div class="kpi-val" id="kpiTodaySales">₹0.00</div>
+                            <div class="kpi-sub">From settled payments today</div>
+                        </div>
+                        <div class="kpi-icon kpi-green">💰</div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-info">
+                            <div class="kpi-label">Pending Udhaar (Khata)</div>
+                            <div class="kpi-val" style="color:#ef4444;" id="kpiTotalUdhaar">₹0.00</div>
+                            <div class="kpi-sub" id="kpiDebtorCount">0 customer(s) with balance</div>
+                        </div>
+                        <div class="kpi-icon kpi-amber">📒</div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-info">
+                            <div class="kpi-label">Inventory Valuation</div>
+                            <div class="kpi-val" id="kpiStockValuation">₹0.00</div>
+                            <div class="kpi-sub" id="kpiTotalSKUs">0 products in catalog</div>
+                        </div>
+                        <div class="kpi-icon kpi-blue">📦</div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-info">
+                            <div class="kpi-label">Low Stock Warnings</div>
+                            <div class="kpi-val" style="color:#f59e0b;" id="kpiLowStockCount">0</div>
+                            <div class="kpi-sub">Items requiring restock</div>
+                        </div>
+                        <div class="kpi-icon kpi-purple">⚠️</div>
+                    </div>
+                </div>
+
+                <!-- Two Column Dashboard Grid -->
+                <div class="grid-cols-2">
+                    <!-- Recent Invoices -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🧾 Recent Bills &amp; Invoices</h3>
+                            <button onclick="switchTab('invoices')" class="btn btn-secondary" style="font-size:11px; padding:4px 8px;">View All</button>
+                        </div>
+                        <div id="dashRecentInvoicesContainer">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Bill #</th>
+                                        <th>Customer</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashRecentInvoicesBody">
+                                    <!-- Dynamic -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Low Stock Alerts -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>⚠️ Stock Replenishment</h3>
+                            <button onclick="openAddItemModal()" class="btn btn-secondary" style="font-size:11px; padding:4px 8px;">+ Add Product</button>
+                        </div>
+                        <div id="dashLowStockList">
+                            <!-- Dynamic -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- TAB 2: WHATSAPP AI ASSISTANT -->
+            <!-- ======================================================== -->
+            <section id="whatsapp" class="tab-content">
+                <div class="grid-cols-2" style="align-items:start;">
+                    
+                    <!-- Left: Custom Input Customer & Inquiry Controls -->
+                    <div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>💬 WhatsApp Customer Enquiry Simulator</h3>
+                            </div>
+                            <p style="font-size:12px; color:#475569; margin-bottom:14px;">
+                                Simulate how your customers enquire on WhatsApp. The AI understands natural <strong>Hinglish, Hindi, and English</strong>, queries your actual live stock, creates draft bills, and sends instant UPI links.
+                            </p>
+
+                            <div class="form-group">
+                                <label>Customer Phone Number *</label>
+                                <input type="text" id="waInputPhone" class="form-control" placeholder="+91 98765 43210" value="+91 98765 43210" onchange="onCustomCustomerChanged()">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Customer Name</label>
+                                <input type="text" id="waInputName" class="form-control" placeholder="e.g. Ramesh Verma" value="Ramesh Verma" onchange="onCustomCustomerChanged()">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Or pick from your saved customer list:</label>
+                                <select id="waCustomerPicker" class="form-control" onchange="onSelectSavedCustomer(this)">
+                                    <option value="">-- Pick from Customers --</option>
+                                </select>
+                            </div>
+
+                            <hr style="border:none; border-top:1px solid #e2e8f0; margin:16px 0;">
+
+                            <h4 style="font-size:12.5px; font-weight:700; margin-bottom:8px;">💡 Quick Test Inquiries (Click to send):</h4>
+                            <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                                <button onclick="sendQuickQuery('Bhai aapke paas kya kya items available hain?')" class="btn btn-secondary" style="font-size:11.5px;">
+                                    "Aapke paas kya items hain?"
+                                </button>
+                                <button onclick="sendQuickQuery('Mera hisab kitna baki hai? Ledger balance batao')" class="btn btn-secondary" style="font-size:11.5px;">
+                                    "Mera hisab kitna baki hai?"
+                                </button>
+                                <button onclick="sendQuickQuery('Latest bill ka UPI payment link bhejo')" class="btn btn-secondary" style="font-size:11.5px;">
+                                    "Latest bill ka UPI link bhejo"
+                                </button>
+                                <button onclick="sendQuickQuery('Doctor se appointment book karna hai kal subah')" class="btn btn-secondary" style="font-size:11.5px;">
+                                    "Appointment book karna hai"
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Real Cloud API Webhook Info -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>🔗 Real WhatsApp Cloud API Integration</h3>
+                            </div>
+                            <div style="font-size:11.5px; color:#475569; line-height:1.6;">
+                                <div><strong>Webhook URL:</strong> <code>http://your-server-ip:8000/api/whatsapp/webhook</code></div>
+                                <div><strong>Verification Token:</strong> <code>vyapar_ai_webhook_verify_secure_token</code></div>
+                                <div><strong>HMAC SHA-256 Protection:</strong> Enabled (Blocks fake requests)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: WhatsApp Phone Simulator -->
+                    <div>
+                        <div class="whatsapp-phone-frame">
+                            <div class="phone-screen">
+                                <!-- Chat Header -->
+                                <div class="wa-header">
+                                    <div class="wa-avatar">👤</div>
+                                    <div class="wa-contact-info">
+                                        <div class="wa-contact-name" id="waChatContactName">Ramesh Verma</div>
+                                        <div class="wa-contact-status" id="waChatContactPhone">+91 98765 43210</div>
+                                    </div>
+                                    <div style="font-size:15px; cursor:pointer;" onclick="reloadActiveChat()" title="Refresh Chat">🔄</div>
+                                </div>
+
+                                <!-- Chat Body -->
+                                <div class="wa-chat-body" id="waChatBody">
+                                    <!-- Dynamic Bubbles -->
+                                </div>
+
+                                <!-- Input Bar -->
+                                <div class="wa-input-bar">
+                                    <input type="text" id="waMessageInput" class="wa-input" placeholder="Ask prices, order items, or check bill...">
+                                    <button onclick="sendSimulatorMessage()" class="wa-send-btn">➤</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- TAB 3: GST INVOICES & BILLS -->
+            <!-- ======================================================== -->
+            <section id="invoices" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🧾 GST Tax Invoices &amp; Bills</h3>
+                        <button onclick="openCreateInvoiceModal()" class="btn btn-primary">+ Create GST Invoice</button>
+                    </div>
+                    <div id="invoicesListContainer" class="data-table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>Customer &amp; Phone</th>
+                                    <th>Date</th>
+                                    <th>Due Date</th>
+                                    <th>Total (₹)</th>
+                                    <th>Paid (₹)</th>
+                                    <th>Balance (₹)</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoicesTableBody">
+                                <!-- Dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- TAB 4: INVENTORY & STOCK -->
+            <!-- ======================================================== -->
+            <section id="inventory" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📦 Product &amp; Service Inventory</h3>
+                        <button onclick="openAddItemModal()" class="btn btn-primary">+ Add Product</button>
+                    </div>
+                    <div id="inventoryListContainer" class="data-table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Product / Item Name</th>
+                                    <th>SKU</th>
+                                    <th>Category</th>
+                                    <th>Cost (₹)</th>
+                                    <th>Selling Price / MRP (₹)</th>
+                                    <th>In Stock</th>
+                                    <th>HSN</th>
+                                    <th>GST %</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTableBody">
+                                <!-- Dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- TAB 5: CUSTOMERS & KHATA LEDGER -->
+            <!-- ======================================================== -->
+            <section id="customers" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>👥 Customer Directory &amp; Khata (Udhaar) Ledger</h3>
+                        <button onclick="openAddCustomerModal()" class="btn btn-primary">+ Add Customer</button>
+                    </div>
+                    <div id="customersListContainer" class="data-table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer Name</th>
+                                    <th>Phone</th>
+                                    <th>Business / Address</th>
+                                    <th>GSTIN</th>
+                                    <th>Total Purchases (₹)</th>
+                                    <th>Udhaar Balance (₹)</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customersTableBody">
+                                <!-- Dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- TAB 6: AUTOMATED FOLLOW-UPS -->
+            <!-- ======================================================== -->
+            <section id="followups" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>⏰ Automated Customer Follow-Up Engine</h3>
+                        <div style="display:flex; gap:8px;">
+                            <button onclick="openCustomFollowupModal()" class="btn btn-secondary">+ Queue Custom Reminder</button>
+                            <button onclick="triggerFollowupCycle()" class="btn btn-success">⚡ Run Follow-Up Engine Now</button>
+                        </div>
+                    </div>
+                    <p style="font-size:12px; color:#475569; margin-bottom:14px;">
+                        The Follow-Up Engine automatically checks for <strong>overdue unpaid invoices</strong> and generates polite WhatsApp messages with your direct UPI payment link.
+                    </p>
+                    <div id="followupsListContainer" class="data-table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer Name</th>
+                                    <th>Phone</th>
+                                    <th>Type</th>
+                                    <th>Message Preview</th>
+                                    <th>Status</th>
+                                    <th>Created At</th>
+                                </tr>
+                            </thead>
+                            <tbody id="followupsTableBody">
+                                <!-- Dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- TAB 7: BUSINESS SETTINGS (INPUTABLE STORE PROFILE) -->
+            <!-- ======================================================== -->
+            <section id="settings" class="tab-content">
+                <div class="card" style="max-width:800px; margin:0 auto;">
+                    <div class="card-header">
+                        <h3>⚙️ Your Business Profile &amp; GST Details</h3>
+                    </div>
+                    <p style="font-size:12px; color:#64748b; margin-bottom:16px;">
+                        Input your real business credentials. These details are printed on all GST tax invoices and embedded into your UPI QR codes.
+                    </p>
+
+                    <form onsubmit="saveBusinessProfile(event)">
+                        <div class="grid-cols-2">
+                            <div class="form-group">
+                                <label>Store / Business Name *</label>
+                                <input type="text" id="cfgStoreName" class="form-control" required placeholder="e.g. Radhe Traders &amp; Kirana">
+                            </div>
+                            <div class="form-group">
+                                <label>Tagline / Slogan</label>
+                                <input type="text" id="cfgTagline" class="form-control" placeholder="e.g. Best Quality Wholesale &amp; Retail">
+                            </div>
+                        </div>
+
+                        <div class="grid-cols-2">
+                            <div class="form-group">
+                                <label>Business Category</label>
+                                <select id="cfgBusinessType" class="form-control">
+                                    <option value="shop">Retail Shop / Kirana / Hardware / Clothing</option>
+                                    <option value="distributor">Wholesale / FMCG / Agro Distributor</option>
+                                    <option value="clinic">Healthcare Clinic / Pathology / Doctor OPD</option>
+                                    <option value="manufacturer">Manufacturing / Fabrication / Job-work</option>
+                                    <option value="custom">Other Custom Business</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Owner / Manager Name</label>
+                                <input type="text" id="cfgOwnerName" class="form-control" placeholder="e.g. Rajesh Kumar">
+                            </div>
+                        </div>
+
+                        <div class="grid-cols-2">
+                            <div class="form-group">
+                                <label>Business Phone / WhatsApp *</label>
+                                <input type="text" id="cfgPhone" class="form-control" required placeholder="+91 98765 43210">
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="cfgEmail" class="form-control" placeholder="contact@mystore.in">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Store Address</label>
+                            <input type="text" id="cfgAddress" class="form-control" placeholder="Shop #12, Market Road, City, State - Pin Code">
+                        </div>
+
+                        <div class="grid-cols-2">
+                            <div class="form-group">
+                                <label>GSTIN (Optional for unregistered stores)</label>
+                                <input type="text" id="cfgGstin" class="form-control" placeholder="e.g. 08ABCDE1234F1Z5">
+                            </div>
+                            <div class="form-group">
+                                <label>State Name &amp; Code</label>
+                                <input type="text" id="cfgStateName" class="form-control" placeholder="e.g. Rajasthan (08)">
+                            </div>
+                        </div>
+
+                        <div class="grid-cols-2">
+                            <div class="form-group">
+                                <label>Your UPI ID (VPA) for Payments *</label>
+                                <input type="text" id="cfgUpiId" class="form-control" required placeholder="e.g. yourstore@okicici or 9876543210@paytm">
+                                <span style="font-size:10.5px; color:#10b981;">Scannable via PhonePe, GPay, Paytm &amp; BHIM</span>
+                            </div>
+                            <div class="form-group">
+                                <label>Payee Name for UPI</label>
+                                <input type="text" id="cfgUpiName" class="form-control" placeholder="e.g. Radhe Traders">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>WhatsApp AI Welcome Message</label>
+                            <textarea id="cfgWelcomeMsg" class="form-control" rows="2" placeholder="Namaste! 🙏 Welcome to our store. How can we help you today?"></textarea>
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                            <button type="submit" class="btn btn-primary" style="padding:10px 20px;">
+                                💾 Save Business Details
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Danger Zone: Reset Data -->
+                    <div style="margin-top:35px; padding-top:20px; border-top:1px solid #fee2e2;">
+                        <h4 style="color:#b91c1c; font-size:13px; font-weight:700; margin-bottom:4px;">⚠️ Danger Zone: Reset Store Data</h4>
+                        <p style="font-size:11.5px; color:#64748b; margin-bottom:12px;">
+                            Wipes all products, bills, customers, and message history so you can start completely fresh.
+                        </p>
+                        <button onclick="confirmResetAllData()" class="btn btn-danger">
+                            🗑️ Erase All Data &amp; Start Clean
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ======================================================== -->
+            <!-- TAB 8: HACKER DEFENSE & SYSTEM PERFORMANCE -->
+            <!-- ======================================================== -->
+            <section id="security" class="tab-content">
+                <!-- System Performance & Portability Banner -->
+                <div class="card" style="background:#f8fafc; border:1px solid #cbd5e1; margin-bottom:20px;">
+                    <div class="card-header">
+                        <h3>⚡ Ultra-Lightweight PC Performance &amp; USB Portability</h3>
+                        <div style="display:flex; gap:8px;">
+                            <button onclick="downloadDatabaseBackup()" class="btn btn-primary" style="font-size:12px; padding:6px 12px;">
+                                💾 1-Click USB Backup (.db)
+                            </button>
+                            <button onclick="optimizeDatabaseNow()" class="btn btn-secondary" style="font-size:12px; padding:6px 12px;">
+                                🧹 Optimize &amp; Defragment DB
+                            </button>
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:12px;">
+                        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:12px;">
+                            <div style="font-size:11px; color:#64748b; font-weight:700; text-transform:uppercase;">RAM Footprint</div>
+                            <div id="sysMemUsage" style="font-size:18px; font-weight:800; color:#10b981;">~55 MB</div>
+                            <div style="font-size:11px; color:#94a3b8;">Featherweight (Runs on 2GB RAM PCs)</div>
+                        </div>
+                        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:12px;">
+                            <div style="font-size:11px; color:#64748b; font-weight:700; text-transform:uppercase;">Database Footprint</div>
+                            <div id="sysDbSize" style="font-size:18px; font-weight:800; color:#4f46e5;">~75 KB</div>
+                            <div style="font-size:11px; color:#94a3b8;">Zero background server bloat</div>
+                        </div>
+                        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:12px;">
+                            <div style="font-size:11px; color:#64748b; font-weight:700; text-transform:uppercase;">Low-Resource Mode</div>
+                            <div style="margin-top:6px; display:flex; align-items:center; gap:8px;">
+                                <input type="checkbox" id="toggleLowPower" onchange="toggleLowPowerMode(this.checked)">
+                                <label for="toggleLowPower" style="font-size:12px; font-weight:600; cursor:pointer;">Disable Animations (For Old PCs)</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-info">
+                            <div class="kpi-label">SQL Injection Defense</div>
+                            <div class="kpi-val" style="color:#10b981; font-size:17px;">100% Prepared</div>
+                            <div class="kpi-sub">Zero string concatenation in queries</div>
+                        </div>
+                        <div class="kpi-icon kpi-green">🛡️</div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-info">
+                            <div class="kpi-label">Rate Limiter (Anti-DoS)</div>
+                            <div class="kpi-val" style="color:#4f46e5; font-size:17px;">Active</div>
+                            <div class="kpi-sub">Sliding window rate filter enabled</div>
+                        </div>
+                        <div class="kpi-icon kpi-blue">⚡</div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-info">
+                            <div class="kpi-label">XSS &amp; Input Sanitizer</div>
+                            <div class="kpi-val" style="color:#10b981; font-size:17px;">Sanitized</div>
+                            <div class="kpi-sub">Strips scripts &amp; evil event handlers</div>
+                        </div>
+                        <div class="kpi-icon kpi-green">🔒</div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-info">
+                            <div class="kpi-label">Meta Webhook HMAC</div>
+                            <div class="kpi-val" style="color:#8b5cf6; font-size:17px;">SHA-256</div>
+                            <div class="kpi-sub">Prevents fake orders &amp; spoofing</div>
+                        </div>
+                        <div class="kpi-icon kpi-purple">🔑</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📜 Security Audit Trail &amp; Access Log</h3>
+                    </div>
+                    <div class="data-table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Event Code</th>
+                                    <th>Description</th>
+                                    <th>IP Address</th>
+                                    <th>Timestamp</th>
+                                </tr>
+                            </thead>
+                            <tbody id="auditLogsBody">
+                                <!-- Dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- MODAL: BUSINESS PROFILE SETUP / EDIT -->
+    <!-- ======================================================== -->
+    <div id="bizProfileModal" class="modal-overlay">
+        <div class="modal-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3 style="font-size:16px; font-weight:700;">🏬 Quick Business Setup</h3>
+                <button onclick="closeBusinessProfileModal()" style="border:none; background:none; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+            <form onsubmit="saveBusinessProfileModal(event)">
+                <div class="form-group">
+                    <label>Store / Business Name *</label>
+                    <input type="text" id="mStoreName" class="form-control" required placeholder="e.g. Krishna Super Store">
+                </div>
+                <div class="grid-cols-2">
+                    <div class="form-group">
+                        <label>Business Category</label>
+                        <select id="mBusinessType" class="form-control">
+                            <option value="shop">Retail / Kirana Shop</option>
+                            <option value="distributor">Wholesale / Distributor</option>
+                            <option value="clinic">Clinic / Healthcare</option>
+                            <option value="manufacturer">Manufacturing / Fabrication</option>
+                            <option value="custom">Other Business</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Business Phone / WhatsApp *</label>
+                        <input type="text" id="mPhone" class="form-control" required placeholder="+91 98765 43210">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>UPI ID for QR Payments *</label>
+                    <input type="text" id="mUpiId" class="form-control" required placeholder="e.g. mystore@upi">
+                    <span style="font-size:11px; color:#10b981;">UPI QR codes will be generated automatically for this ID</span>
+                </div>
+                <div class="form-group">
+                    <label>Store Address</label>
+                    <input type="text" id="mAddress" class="form-control" placeholder="City, State">
+                </div>
+                <div class="form-group">
+                    <label>GSTIN (Optional)</label>
+                    <input type="text" id="mGstin" class="form-control" placeholder="e.g. 08ABCDE1234F1Z5">
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                    <button type="button" onclick="closeBusinessProfileModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Business Details</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- MODAL: CREATE GST INVOICE -->
+    <!-- ======================================================== -->
+    <div id="createInvoiceModal" class="modal-overlay">
+        <div class="modal-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h3 style="font-size:16px; font-weight:700;">🧾 Create GST Tax Invoice</h3>
+                <button onclick="closeCreateInvoiceModal()" style="border:none; background:none; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+
+            <div class="grid-cols-2">
+                <div class="form-group">
+                    <label>Customer Name *</label>
+                    <input type="text" id="invCustName" class="form-control" placeholder="e.g. Ramesh Verma" required>
+                </div>
+                <div class="form-group">
+                    <label>Customer Phone *</label>
+                    <input type="text" id="invCustPhone" class="form-control" placeholder="+91 98765 43210" required>
+                </div>
+            </div>
+
+            <div class="grid-cols-2">
+                <div class="form-group">
+                    <label>Customer Address</label>
+                    <input type="text" id="invCustAddress" class="form-control" placeholder="Delivery/Shop Address">
+                </div>
+                <div class="form-group">
+                    <label>Customer GSTIN (Optional)</label>
+                    <input type="text" id="invCustGstin" class="form-control" placeholder="e.g. 08AABCS1429B1Z2">
+                </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+                <input type="checkbox" id="invIsInterstate">
+                <label for="invIsInterstate" style="margin:0; cursor:pointer; font-size:12px;">Inter-state supply (Charge IGST instead of CGST+SGST)</label>
+            </div>
+
+            <hr style="border:none; border-top:1px solid #e2e8f0; margin:14px 0;">
+
+            <div class="form-group">
+                <label>Item Description / Name *</label>
+                <div style="display:flex; gap:8px;">
+                    <select id="invNewItemSelect" class="form-control" style="flex:1;" onchange="onInvoiceItemPicked()">
+                        <option value="">-- Choose from Catalog or Type below --</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="text" id="invCustomItemName" class="form-control" placeholder="Or type any custom item name...">
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:10px;">
+                <div class="form-group">
+                    <label>Quantity *</label>
+                    <input type="number" id="invItemQty" class="form-control" value="1" min="0.01" step="any" oninput="recalcInvoiceTotals()">
+                </div>
+                <div class="form-group">
+                    <label>Rate (₹) *</label>
+                    <input type="number" id="invItemRate" class="form-control" step="any" placeholder="0.00" oninput="recalcInvoiceTotals()">
+                </div>
+                <div class="form-group">
+                    <label>GST %</label>
+                    <select id="invItemGst" class="form-control" onchange="recalcInvoiceTotals()">
+                        <option value="0">0%</option>
+                        <option value="5">5%</option>
+                        <option value="12">12%</option>
+                        <option value="18" selected>18%</option>
+                        <option value="28">28%</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Unit</label>
+                    <input type="text" id="invItemUnit" class="form-control" value="pcs">
+                </div>
+            </div>
+            <input type="hidden" id="invItemHsn">
+
+            <!-- Live Calculation Summary -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px 14px; margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:12px; color:#64748b;">Subtotal: <strong id="lblSubtotal">₹0.00</strong> | Tax: <strong id="lblTax">₹0.00</strong></span>
+                <span style="font-size:14px; font-weight:800; color:#4f46e5;">Total: <span id="lblGrandTotal">₹0.00</span></span>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                <button type="button" onclick="closeCreateInvoiceModal()" class="btn btn-secondary">Cancel</button>
+                <button type="button" onclick="submitCreateInvoice()" class="btn btn-primary">Generate Bill &amp; UPI QR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- MODAL: ADD PRODUCT -->
+    <!-- ======================================================== -->
+    <div id="addItemModal" class="modal-overlay">
+        <div class="modal-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h3 style="font-size:16px; font-weight:700;">📦 Add Product to Catalog</h3>
+                <button onclick="closeAddItemModal()" style="border:none; background:none; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+
+            <form onsubmit="submitAddItem(event)">
+                <div class="form-group">
+                    <label>Product / Item Name *</label>
+                    <input type="text" id="newItemName" class="form-control" placeholder="e.g. Sunflower Oil 1L, M12 Bolts, CBC Test" required>
+                </div>
+
+                <div class="grid-cols-2">
+                    <div class="form-group">
+                        <label>SKU / Barcode (Optional)</label>
+                        <input type="text" id="newItemSku" class="form-control" placeholder="e.g. OIL-01">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <input type="text" id="newItemCategory" class="form-control" placeholder="e.g. Grocery / Hardware / Healthcare" value="General">
+                    </div>
+                </div>
+
+                <div class="grid-cols-2">
+                    <div class="form-group">
+                        <label>Cost Price (₹)</label>
+                        <input type="number" id="newItemCost" class="form-control" value="0.00" step="any">
+                    </div>
+                    <div class="form-group">
+                        <label>Selling Price / MRP (₹) *</label>
+                        <input type="number" id="newItemSell" class="form-control" step="any" placeholder="0.00" required>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:10px;">
+                    <div class="form-group">
+                        <label>Opening Stock</label>
+                        <input type="number" id="newItemQty" class="form-control" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label>Unit</label>
+                        <input type="text" id="newItemUnit" class="form-control" value="pcs" placeholder="pcs/kg/ltr/box">
+                    </div>
+                    <div class="form-group">
+                        <label>HSN Code</label>
+                        <input type="text" id="newItemHsn" class="form-control" placeholder="e.g. 1512">
+                    </div>
+                    <div class="form-group">
+                        <label>GST Slab %</label>
+                        <select id="newItemGst" class="form-control">
+                            <option value="0">0%</option>
+                            <option value="5">5%</option>
+                            <option value="12">12%</option>
+                            <option value="18" selected>18%</option>
+                            <option value="28">28%</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Low Stock Warning Threshold</label>
+                    <input type="number" id="newItemMin" class="form-control" value="5">
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
+                    <button type="button" onclick="closeAddItemModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save to Catalog</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- MODAL: ADD CUSTOMER -->
+    <!-- ======================================================== -->
+    <div id="addCustomerModal" class="modal-overlay">
+        <div class="modal-box" style="max-width:480px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h3 style="font-size:16px; font-weight:700;">👥 Add New Customer / Khata Account</h3>
+                <button onclick="closeAddCustomerModal()" style="border:none; background:none; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+
+            <form onsubmit="submitAddCustomer(event)">
+                <div class="form-group">
+                    <label>Customer Name *</label>
+                    <input type="text" id="newCustName" class="form-control" placeholder="e.g. Ramesh Verma" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Mobile Number *</label>
+                    <input type="text" id="newCustPhone" class="form-control" placeholder="+91 98765 43210" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Business / Firm Name (Optional)</label>
+                    <input type="text" id="newCustBiz" class="form-control" placeholder="e.g. Verma Sweets">
+                </div>
+
+                <div class="grid-cols-2">
+                    <div class="form-group">
+                        <label>Opening Udhaar / Due (₹)</label>
+                        <input type="number" id="newCustBalance" class="form-control" value="0.00" step="any">
+                    </div>
+                    <div class="form-group">
+                        <label>GSTIN (Optional)</label>
+                        <input type="text" id="newCustGstin" class="form-control" placeholder="08ABCDE1234F1Z5">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" id="newCustAddress" class="form-control" placeholder="Area / City">
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
+                    <button type="button" onclick="closeAddCustomerModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Customer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- MODAL: RECORD PAYMENT -->
+    <!-- ======================================================== -->
+    <div id="recordPaymentModal" class="modal-overlay">
+        <div class="modal-box" style="max-width:420px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h3 style="font-size:16px; font-weight:700;">💰 Record Payment</h3>
+                <button onclick="closeRecordPaymentModal()" style="border:none; background:none; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+
+            <input type="hidden" id="payInvId">
+            <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:6px; padding:10px 12px; margin-bottom:14px;">
+                <div style="font-size:12px; color:#065f46;">Bill: <strong id="payInvNoLabel">#INV</strong></div>
+            </div>
+
+            <div class="form-group">
+                <label>Amount Received (₹) *</label>
+                <input type="number" id="payAmountInput" class="form-control" step="any" required>
+            </div>
+
+            <div class="form-group">
+                <label>Payment Mode</label>
+                <select id="payModeSelect" class="form-control">
+                    <option value="UPI">📱 UPI (Google Pay, PhonePe, Paytm)</option>
+                    <option value="CASH">💵 Cash</option>
+                    <option value="NETBANKING">🏦 Bank Transfer / NEFT / IMPS</option>
+                    <option value="CHEQUE">📝 Cheque</option>
+                </select>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
+                <button type="button" onclick="closeRecordPaymentModal()" class="btn btn-secondary">Cancel</button>
+                <button type="button" onclick="submitRecordPayment()" class="btn btn-success">Confirm Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- MODAL: QUEUE CUSTOM FOLLOW-UP -->
+    <!-- ======================================================== -->
+    <div id="customFollowupModal" class="modal-overlay">
+        <div class="modal-box" style="max-width:480px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h3 style="font-size:16px; font-weight:700;">⏰ Queue Customer WhatsApp Reminder</h3>
+                <button onclick="closeCustomFollowupModal()" style="border:none; background:none; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+            <form onsubmit="submitCustomFollowup(event)">
+                <div class="form-group">
+                    <label>Customer Name *</label>
+                    <input type="text" id="folCustName" class="form-control" required placeholder="e.g. Ramesh Verma">
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp Number *</label>
+                    <input type="text" id="folPhone" class="form-control" required placeholder="+91 98765 43210">
+                </div>
+                <div class="form-group">
+                    <label>Follow-up Reason</label>
+                    <select id="folType" class="form-control">
+                        <option value="PAYMENT_REMINDER">Payment / Bill Reminder</option>
+                        <option value="ABANDONED_QUOTE">Quotation Follow-Up</option>
+                        <option value="CLINIC_CHECKUP">Health / Doctor Checkup</option>
+                        <option value="REORDER">Restock / Reorder Reminder</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Message Content *</label>
+                    <textarea id="folText" class="form-control" rows="3" required placeholder="Namaste ji! Polite reminder regarding your pending invoice..."></textarea>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
+                    <button type="button" onclick="closeCustomFollowupModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Schedule Reminder</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
